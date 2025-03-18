@@ -1,0 +1,75 @@
+---
+apiVersion: apps/v1 ## Kubernetes API Version
+kind: Deployment ## Type of resource
+metadata:
+ labels:
+   app: kkfileview-dev ## Labels given by user
+ name: kkfileview-dev ## Name given to the <kind> resource
+ namespace: it-ar ## Namespace in which to deploy the resource
+spec:
+ replicas: 2
+ selector:
+   matchLabels: ## Should be same as spec.template.labels
+     app: kkfileview-dev
+ template:
+   metadata:
+     labels:
+       app: kkfileview-dev
+   spec:
+      hostAliases:
+      - ip: "172.30.158.217"
+        hostnames:
+        - "biom-lib-web-api-dev.merckgroup.com"
+      - ip: "172.30.159.103"
+        hostnames:
+        - "biom-lib-web-api-dev.merckgroup.com"
+      - ip: "172.30.159.242"
+        hostnames:
+        - "biom-lib-web-api-dev.merckgroup.com"
+      - ip: "172.30.158.217"
+        hostnames:
+        - "biop-libs-dev.merckgroup.com"
+      - ip: "172.30.159.103"
+        hostnames:
+        - "biop-libs-dev.merckgroup.com"
+      - ip: "172.30.159.242"
+        hostnames:
+        - "biop-libs-dev.merckgroup.com"
+      - ip: "172.30.158.217"
+        hostnames:
+        - "ssoc-api-dev.merckgroup.com"
+      - ip: "172.30.159.103"
+        hostnames:
+        - "ssoc-api-dev.merckgroup.com"
+      - ip: "172.30.159.242"
+        hostnames:
+        - "ssoc-api-dev.merckgroup.com"
+   containers:
+     - image: "340752819914.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/kkfileview:4.3.1"
+       name: kkfileview-dev
+       ports:
+           - containerPort: 8012
+             name: http
+       volumeMounts: ## Volumes to mount
+           - name: kkfileview-dev
+             mountPath: "/opt/kkFileView-4.3.0/file"
+       volumes:
+         - name: kkfileview-dev
+           persistentVolumeClaim:
+             claimName: kkfileview-dev
+---
+apiVersion: v1
+kind: Service
+metadata:
+ name: kkfileview-dev
+ namespace: it-ar
+ labels:
+   service: kkfileview-dev
+spec:
+ type: ClusterIP
+ selector:
+   app: kkfileview-dev
+ ports:
+   - port: 8012
+     name: http
+     targetPort: 8012
