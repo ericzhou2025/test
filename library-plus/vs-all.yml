@@ -1,0 +1,117 @@
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: library-plus-api-dev
+spec:
+  hosts:
+  - library-plus-api-dev.merckgroup.com
+  gateways:
+  - istio-system/gateway
+  http:
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: library-plus-python.it-ar.svc.cluster.local
+        port:
+          number: 8000
+  - match:
+    - uri:
+        prefix: /sso
+    route:
+    - destination:
+        host: biop-k8s-api-service-sso.it-ar.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
+       prefix: /user-management
+    route:
+    - destination:
+       host: biop-k8s-api-service-user-management.it-ar.svc.cluster.local
+       port:
+          number: 80
+  - match:
+    - uri:
+       prefix: /document
+    route:
+    - destination:
+       host: biop-k8s-api-service-document.it-ar.svc.cluster.local
+       port:
+          number: 80
+
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: neo4j-db
+spec:
+  hosts:
+  - library-plus-neo4j-dev.merckgroup.com
+  gateways:
+  - istio-system/gateway
+  http:
+  - match:
+    - uri:
+        prefix: /browser
+    route:
+    - destination:
+        host: neo4j-db.it-ar.svc.cluster.local
+        port:
+          number: 7474
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: neo4j-db-api
+spec:
+  hosts:
+  - library-plus-neo4j-dev.merckgroup.com
+  gateways:
+  - istio-system/gateway
+  http:
+  - match:
+    - uri:
+        prefix: /db
+    route:
+    - destination:
+        host: neo4j-db.it-ar.svc.cluster.local
+        port:
+          number: 7474
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: neo4j-db-7687
+spec:
+  hosts:
+  - library-plus-neo4j-dev.merckgroup.com
+  gateways:
+  - istio-system/gateway
+  http:
+  - route:
+    - destination:
+        host: neo4j-db.it-ar.svc.cluster.local
+        port:
+          number: 7687
+
+
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: lp-kkfileview-vs
+spec:
+  hosts:
+  - library-plus-kkfileview-dev.merckgroup.com
+  gateways:
+  - istio-system/gateway
+  http:
+  - route:
+    - destination:
+        host: kkfileview-dev.it-ar.svc.cluster.local
+        port:
+          number: 8012
