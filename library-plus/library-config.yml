@@ -1,0 +1,44 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: biop-k8s-api-service-library-config
+  namespace: it-ar
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: biop-k8s-api-service-library-config
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: biop-k8s-api-service-library-config
+        version: v1
+        apptype: api
+      annotations:
+        annotations-key: annotation-value
+    spec:
+      containers:
+        - name: biop-k8s-api-service-library-config
+          image: "340752819914.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/biop-k8s-api-service-library-config:latest"
+          imagePullPolicy: Always
+          ports:
+            - name: service
+              containerPort: 8006
+              protocol: TCP
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: biop-k8s-api-service-library-config
+  namespace: it-ar
+spec:
+  type: ClusterIP
+  selector:
+    app: biop-k8s-api-service-library-config
+  ports:
+    - name: http
+      port: 80
+      targetPort: 8006
