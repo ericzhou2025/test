@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: library-plus-python
+  namespace: it-ar # select which namespace your deployment will be deployed
+spec:
+  replicas: 1 #at least two
+  selector:
+    matchLabels: #match the pod's label
+      app: library-plus-python
+      version: v1
+  template: #this template is for pod creation
+    metadata:
+      labels:
+        app: library-plus-python #name should be unique
+        version: v1
+        apptype: api
+      annotations: #you can put some annotations here if you like, and maybe other tool will check the annotations
+        annotations-key: annotation-value
+        # sidecar.istio.io/inject: "false"
+    spec:
+#      volumes:
+#        - name: cts-management-api
+#          persistentVolumeClaim:
+#            claimName: management-api-pvc
+#      initContainers: # Add an initContainer to run initialization commands
+#        - name: init-database
+#          imagePullPolicy: Always
+#          image: "579230247445.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/batrp_webbackend:batrp_v1" 
+#          command: ["python", "manage.py", "setup-database"]  
+      containers:
+        - name: library-plus-python 
+          image: "340752819914.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/library-plus-python:latest" #ToDo
+          imagePullPolicy: Always
+          ports: 
+            - name: service
+              containerPort: 8000
+              protocol: TCP
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  library-plus-python 
+  namespace: it-ar 
+spec:
+  type: ClusterIP 
+  selector:
+    app: library-plus-python
+  ports: #
+    - name:  http  
+      port:  8000 
+      targetPort:  8000 
