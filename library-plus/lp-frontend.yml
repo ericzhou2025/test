@@ -33,7 +33,7 @@ spec:
       containers:
         - name: library-plus-frontend # the container name
           image:
-            "340752819914.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/library-plus-frontend-dev:latest"
+            "340752819914.dkr.ecr.eu-central-1.amazonaws.com/it_ar_k8s/library-plus-frontend-dev:v1"
           imagePullPolicy: Always
           ports: # the port this container will be exposed
             - name: service
