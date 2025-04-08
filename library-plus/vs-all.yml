@@ -9,14 +9,7 @@ spec:
   gateways:
   - istio-system/gateway
   http:
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: library-plus-python.it-ar.svc.cluster.local
-        port:
-          number: 8000
+
   - match:
     - uri:
         prefix: /sso
@@ -41,6 +34,14 @@ spec:
        host: biop-k8s-api-service-document.it-ar.svc.cluster.local
        port:
           number: 80
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: library-plus-python.it-ar.svc.cluster.local
+        port:
+          number: 8000
 
 
 ---
